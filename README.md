@@ -14,7 +14,7 @@ This scripts reads alle text from **stdin** and outputs the invisible unicode ec
 ```console
 foo@bar:~$ invisible=$(echo "This should be invisible!" | python3 ./cli.py)
 foo@bar:~$ echo "$invisible"
-
+>>>
 foo@bar:~$ echo "$invisible" | python3 ./cli.py -d
-This should be invisible!
+>>> This should be invisible!
 ```
