@@ -17,10 +17,10 @@ The default is encoding. All invisible text will be outputed between a start and
 # minimal example 
 
 ```console
-foo@bar:~$ invisible=$(echo "This should be invisible!" | python3 ./cli.py)
-foo@bar:~$ echo "$invisible"
+foo@bar:~$ echo "This should be invisible!" | python3 ./cli.py > out.txt
+foo@bar:~$ cat out.txt
 >>> Start::End
-foo@bar:~$ echo "$invisible" | python3 ./cli.py -d
+foo@bar:~$ cat out.txt | python3 ./cli.py -d
 >>> This should be invisible!
 ```
 Do not forget the start and end sequences at decoding!
