@@ -11,7 +11,7 @@ This scripts reads alle text from **stdin** and outputs the invisible unicode ec
 
 # Example script 
 
-```bash
+```console
 message="This should be invisible!"
 # encode
 invisible=$(echo "$message" | python3 ./cli.py)
