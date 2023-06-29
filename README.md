@@ -15,7 +15,9 @@ This scripts reads alle text from **stdin** and outputs the invisible unicode ec
 message="This should be invisible!"
 # encode
 invisible=$(echo "$message" | python3 ./cli.py)
-echo "$invisible"    # expected output "Start::End"
+echo "$invisible"
+>>> Start::End
 # decode
-echo "$invisible" | python3 ./cli.py -d   # expected output "This should be invisible!"
+echo "$invisible" | python3 ./cli.py -d
+>>> expected output "This should be invisible!"
 ```
