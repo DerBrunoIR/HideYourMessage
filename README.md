@@ -18,3 +18,4 @@ foo@bar:~$ echo "$invisible"
 foo@bar:~$ echo "$invisible" | python3 ./cli.py -d
 >>> This should be invisible!
 ```
+Do not forget the start and end sequences at decoding!
