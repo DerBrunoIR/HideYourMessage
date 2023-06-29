@@ -23,21 +23,52 @@ invisible_characters = [
                        ]
 invisible_separator = zero_width_space
 
-builder = CharsetTranslatorBuilder("".join(invisible_characters), invisible_separator)
+builder = CharsetTranslatorBuilder()\
+    .setCharset("".join(invisible_characters))\
+    .setSeparator(invisible_separator)\
+    .setSequences("Start:", ":End")
 translator = builder.build()
 
-if __name__ == "__main__":
-    with open("message.txt", "r") as f:
-        text = f.read()
 
-        print(f"len(text)={len(text)}")
+
+def main(text: str, encode: bool) -> str:
+    if encode:
         encoded_text = translator.encode(text)
-        print("len(encoded_text) =", len(encoded_text))
-        decoded_text = "".join(translator.decode(encoded_text))
-        print(f"len(decoded_text)={len(decoded_text)}")
-        assert decoded_text == text, "Encoding issue! Encoded text unequals decoded text!"
+        return encoded_text
+    else:
+        decoded_text = "".join(translator.decode(text))
+        return decoded_text
 
-    with open("invisible.txt", "w") as f:
-        f.write(encoded_text)
 
-    print("saved to './invisible.txt'")
+
+if __name__ == "__main__":
+    from argparse import ArgumentParser
+    import sys
+
+    parser = ArgumentParser(
+            prog="InvisibleUnicodeText",
+            description="Encodes or decodes the given text into invisilbe unicode text.",
+            epilog="The result is forwarded to stdin. Log messages are send to stderr. \nmade by Bruno")
+    parser.add_argument("-d", "--decode", dest="encode", action="store_false", default=True, required=False, help="switch from encoding to decoding stdin")
+    parser.add_argument("--debug", dest="debug", action="store_true", default=False, required=False, help="enable debug logs into stderr")
+    args = parser.parse_args(sys.argv[1:])
+
+    def log(msg, file):
+        if args.debug:
+            print(msg, file=file)
+
+    stdin = sys.stdin
+    stdout = sys.stdout
+    stderr = sys.stderr
+
+    content = stdin.read()
+    if args.encode:
+        log(f"Encoding {len(content)} characters.", file=stderr)
+    else:
+        log(f"Decoding {len(content)} characters.", file=stderr)
+
+    res = main(content, args.encode)
+    print(res, file=stdout)
+    log(f"Message length: {len(res)} characters", file=stderr)
+    log("", file=stderr)
+    exit(0)
