@@ -5,7 +5,7 @@
 
 # Usage
 ```bash 
-python3 ./cli.py [--debug] [-d|--decode]
+python3 ./cli.py [--debug] [-d,--decode]
 ```
 This scripts reads alle text from **stdin** and outputs the invisible unicode ecoded text to **stdout**.
 
