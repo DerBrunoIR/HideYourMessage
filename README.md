@@ -10,7 +10,7 @@ python3 ./cli.py [--debug] [-d,--decode]
 This scripts reads alle text from **stdin** and outputs the invisible unicode ecoded text to **stdout**.
 The default is encoding. All invisible text will be outputed between a start and end sequence otherwise it would be hard to find.
 
-# instalation
+# install
 - `git clone https://github.com/DerBrunoIR/Translator`
 - `cd ./Translator`
   
