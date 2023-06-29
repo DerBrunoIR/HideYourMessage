@@ -12,12 +12,9 @@ This scripts reads alle text from **stdin** and outputs the invisible unicode ec
 # Example script 
 
 ```console
-foo@bar:~$ message="This should be invisible!"
-# encode
-foo@bar:~$ invisible=$(echo "$message" | python3 ./cli.py)
+foo@bar:~$ invisible=$(echo "This should be invisible!" | python3 ./cli.py)
 foo@bar:~$ echo "$invisible"
-Start::End
-# decode
+
 foo@bar:~$ echo "$invisible" | python3 ./cli.py -d
 This should be invisible!
 ```
