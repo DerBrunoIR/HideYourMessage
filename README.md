@@ -9,7 +9,7 @@ python3 ./cli.py [--debug] [-d,--decode]
 ```
 This scripts reads alle text from **stdin** and outputs the invisible unicode ecoded text to **stdout**.
 
-# Example script 
+# Example usage 
 
 ```console
 foo@bar:~$ invisible=$(echo "This should be invisible!" | python3 ./cli.py)
