@@ -1,5 +1,7 @@
+from __future__ import annotations
 from typing import TypeVar, Protocol, Iterable, Any, Callable
 import string
+import re
 
 debug_global_indentation_count = 0
 def debug(func):
@@ -261,8 +263,29 @@ class ChainTranslatorBuilder(BuilderInterface):
 
 class CharsetTranslatorBuilder(BuilderInterface):
     translator: TranslatorInterface[Any, Any]
+    charset: str
+    separator: str
+    start_seq: str
+    end_seq: str
 
-    def __init__(self, charset: str, sep: str):
+    def setCharset(self, charset: str) -> CharsetTranslatorBuilder:
+        self.charset = charset
+        return self
+
+    def setSeparator(self, separator: str) -> CharsetTranslatorBuilder:
+        self.separator = separator
+        return self
+
+    def setSequences(self, start_seq: str, end_seq: str) -> CharsetTranslatorBuilder:
+        self.start_seq = start_seq
+        self.end_seq = end_seq
+        return self
+
+    def build(self) -> TranslatorInterface[str, str]:
+        charset = self.charset
+        separator = self.separator
+        start_seq, end_seq = self.start_seq, self.end_seq
+        
 
         digits = string.digits + string.ascii_letters
         for i in range(len(digits), len(charset)):
@@ -301,16 +324,50 @@ class CharsetTranslatorBuilder(BuilderInterface):
                         list
                     )),
                 FunctionTranslator(
-                    sep.join, 
-                    lambda x: x.split(sep) 
+                    separator.join, 
+                    lambda x: x.split(separator) 
                     ),
+                EmbeddedMessageTranslator(
+                    start_seq,
+                    end_seq,
+                    )
                 ]
 
         builder = ChainTranslatorBuilder()
-        self.translator = builder.addAll(pipe).build()
+        return builder.addAll(pipe).build()
 
 
-    def build(self):
-        return self.translator
 
-    
+
+class EmbeddedMessageTranslator(TranslatorInterface[str,str]):
+    start_seq: str 
+    ennd_seq: str 
+    pattern: re.Pattern
+
+    def __init__(self, start_seq: str, end_seq: str):
+        self.start_seq = start_seq
+        self.end_seq = end_seq
+        self.pattern = re.compile(f"{self.start_seq}.*{self.end_seq}", re.UNICODE)
+
+    def encode(self, rawMsg: str) -> str:
+        return f"{self.start_seq}{rawMsg}{self.end_seq}"
+
+    def decode(self, text: str) -> str:
+        for match in self.pattern.finditer(text):
+            candidate = match.group()
+            return self.decodeCandidate(candidate)
+        raise ValueError("No message found!")
+
+    def decodeCandidate(self, embeddedMsg: str) -> str:
+        if not embeddedMsg.startswith(self.start_seq):
+            raise ValueError(f"Message doesn't start with the expected start sequence. Instead of '{self.start_seq}', '{embeddedMsg[:10]}' was found!")
+        if not embeddedMsg.endswith(self.end_seq):
+            raise ValueError(f"Message doesn't end with the expected end sequence. Instead of '{self.end_seq}', '{embeddedMsg[-10:]}' was found!")
+        left_offset = len(self.start_seq)
+        right_offset = len(self.end_seq)
+        msgLen = len(embeddedMsg)
+        return embeddedMsg[left_offset: msgLen-right_offset]
+
+    def __repr__(self):
+        return f"<EmbeddedMessageTranslator start_seq='{self.start_seq}' end_seq='{self.end_seq}'>"
+
