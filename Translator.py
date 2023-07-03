@@ -249,17 +249,15 @@ class ChainTranslatorBuilder(BuilderInterface):
         return self
 
     def build(self) -> TranslatorInterface[Any, Any]:
-        match self.translators:
-            case 0:
+        if len(self.translators) == 0:
                 raise RuntimeError("Can't build TranslatorChain without translators!")
-            case 1:
-                return self.translators[0]
-            case _:
-                T = ChainedTranslator(*self.translators[:2])
-                for t in self.translators[2:]:
-                    T = ChainedTranslator(T, t)
-                return T
+        elif len(self.translators) == 1:
+            return self.translators[0]
 
+        T = ChainedTranslator(*self.translators[:2])
+        for t in self.translators[2:]:
+            T = ChainedTranslator(T, t)
+        return T
 
 
 class EmbeddedMessageTranslator(TranslatorInterface[str,str]):
