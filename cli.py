@@ -80,16 +80,16 @@ unicode_invisible_zero_width = [
         chr(0x200d),
         chr(0xad),
         chr(0x200f),
+        chr(0x1d173),
+        chr(0x1d174),
+        chr(0x1d159),
+        chr(0x1d175),
+        chr(0x1d176),
+        chr(0x1d177),
+        chr(0x1d178),
+        chr(0x1d17a),
         # chr(0x2067), # invertes left and right for the remaining text
         # chr(0x180e), # seems not to work as without suffix
-        # chr(0x1d173),
-        # chr(0x1d174),
-        # chr(0x1d159),
-        # chr(0x1d175),
-        # chr(0x1d176),
-        # chr(0x1d177),
-        # chr(0x1d178),
-        # chr(0x1d17a),
         ]
 
 # configuration
