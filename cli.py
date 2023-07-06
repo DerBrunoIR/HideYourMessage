@@ -138,7 +138,7 @@ if __name__ == "__main__":
     parser.add_argument("--debug", 
                         dest="debug", 
                         action="store_true", 
-                        default=True, # False, 
+                        default=False, 
                         required=False, 
                         help="enable debug logs into stderr"
                         )
