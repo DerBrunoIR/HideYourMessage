@@ -62,6 +62,8 @@ unicode_invisible = {
 
 
 unicode_invisible_zero_width = [
+        chr(0x2067), # right to left isolate
+        chr(0x2066), # left to right isolate
         chr(0x34f),
         chr(0x2063),
         chr(0x200e),
@@ -76,7 +78,6 @@ unicode_invisible_zero_width = [
         chr(0x200c),
         chr(0x2060),
         chr(0x2068),
-        chr(0x2066),
         chr(0x200d),
         chr(0xad),
         chr(0x200f),
@@ -88,7 +89,6 @@ unicode_invisible_zero_width = [
         chr(0x1d177),
         chr(0x1d178),
         chr(0x1d17a),
-        # chr(0x2067), # invertes left and right for the remaining text
         # chr(0x180e), # seems not to work as without suffix
         ]
 
