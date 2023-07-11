@@ -2,6 +2,7 @@
 
 - python 3.10.6 (perhaps it works with older versions too)
 - tested on ubuntu 22.04
+- Bash scripts require `sudo apt install xclip`
 
 # Usage
 ```bash 
@@ -35,8 +36,7 @@ stdout copied to clipboard!
 
 hiddenText on  main via 🐍 v3.10.6 took 3s 
 ❯ ./read 
-[Ctrl-V]
-⁥⁠͏​‏͏​‍͏​⁤­͏‎﻿͏​𝅶͏​⁤͏
+[Ctrl-V]⁥⁠͏​‏͏​‍͏​⁤­͏‎﻿͏​𝅶͏​⁤͏
 Some hidden text
 ```
 
