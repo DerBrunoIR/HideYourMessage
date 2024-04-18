@@ -31,7 +31,7 @@ Do not forget the start and end sequences at decoding!
 ```console 
 hiddenText on  main via 🐍 v3.10.6 
 ❯ ./write
-Some hidden text
+< Some hidden text
 stdout copied to clipboard!
 
 hiddenText on  main via 🐍 v3.10.6 took 3s 
