@@ -45,7 +45,7 @@ foo@bar:~$ ./read
 ```console
 foo@bar:~$ echo "This should be invisible!" | python3 ./cli.py > out.txt
 foo@bar:~$ cat out.txt
-❯ Start:͏‌‌‏​⁠؜⁠​⁠﻿⁠​‏‌​‌‏؜​⁠؜⁠​⁠﻿⁠​⁠؜‌​‌‍‍​‏‌​‌‍﻿​‏‌​⁠﻿﻿​‌‍‏​‌‍⁠​⁠﻿؜​‌‍‏​⁠﻿‌​‌‍‏​﻿‍‎:End
+❯ Start:͏‌‌‏​⁠؜⁠​⁠﻿⁠​‏‌​‌‏؜​⁠؜⁠​⁠﻿⁠​⁠؜‌​‌‍‍​‏‌​‌‍﻿​‏‌​⁠﻿﻿​‌‍‏​‌‍⁠​⁠﻿؜​‌‍‏​⁠﻿‌​‌‍‏​﻿‍‎:End // Try to move your cursor through this output.
 foo@bar:~$ cat out.txt | python3 ./cli.py -d
 >>> This should be invisible!
 ```
