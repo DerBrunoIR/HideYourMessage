@@ -3,7 +3,7 @@
 This command line tool allows to encode text into a invisible and zero width subset of unicode characters.
 
 Since unicode is rendered differently by different libaries the list of invisible characters must be altered accordingly. 
-The default set has been tested at `PopOs! 22.04`.
+The default set has been tested at `PopOS 22.04`.
 
 # How the encoding works
 1. First, we convert the input text into base `n-1` representation.
@@ -53,5 +53,5 @@ foo@bar:~$ cat out.txt | python3 ./cli.py -d
 ```
 
 # known issues
-- On windows command line unicode output is probably not working, try to use `wsl`.
+- On windows command line unicode output is probably not working, try `wsl` instead.
 
