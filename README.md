@@ -12,6 +12,8 @@ The default set has been tested at `PopOs! 22.04`.
 
 Decoding can be achieved by following these steps in reverse.
 
+Using a higher base then two for representing invisible characters allow a more compact representation.
+
 # Requirements 
 
 - python 3.10.6
