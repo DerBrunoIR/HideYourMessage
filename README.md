@@ -12,7 +12,7 @@ The default set has been tested at `PopOs! 22.04`.
 
 Decoding can be achieved by following these steps in reverse.
 
-Using the `n-th` base instead of just two allows a compacter representation.
+Using the `n-th` base instead of just `2` allows a compacter representation.
 
 # Requirements 
 
