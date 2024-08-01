@@ -1,5 +1,14 @@
-This command line tool allows to encode and decode text into and into invisible unicode characters.
-Since unicode is rendered differently the set of invisible characters must be altered for different platforms then `Ubuntu 22.04`.
+This command line tool allows to encode text into a invisible and zero width subset of unicode characters.
+
+Since unicode is rendered differently by different libaries the list of invisible characters must be altered accordingly. 
+The default set has been tested at `PopOs! 22.04`.
+
+# How the encoding works
+1. First, we convert the input text into base `n-1` representation.
+2. Then we map each digit `d` to the `d-th` character inside the list of invisible characters.
+3. Finally, we insert between each base `n-1` number the `n-th` invisible character as separator.
+
+Decoding can be achieved by following these steps in reverse.
 
 # Requirements 
 
@@ -40,5 +49,5 @@ foo@bar:~$ cat out.txt | python3 ./cli.py -d
 ```
 
 # known issues
-- On windows unicode encoding migh not be supported by the terminal.
+- On windows command line unicode output is probably not working, try to use `wsl`.
 
