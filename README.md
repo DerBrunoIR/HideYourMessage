@@ -11,6 +11,7 @@ python3 ./cli.py [--debug] [-d,--decode]
 This script reads alle text from **stdin** and outputs the invisible unicode ecoded text to **stdout**.
 The default is encoding. 
 All invisible text will be outputed between a start and end sequence, otherwise it would be hard to find.
+Make sure your terminal supports unicode.
 
 # install
 - `git clone https://github.com/DerBrunoIR/Translator`
@@ -29,12 +30,10 @@ Do not forget the start and end sequences at decoding!
 
 # running bash scripts
 ```console 
-hiddenText on  main via 🐍 v3.10.6 
 ❯ ./write
 < Some hidden text
 stdout copied to clipboard!
 
-hiddenText on  main via 🐍 v3.10.6 took 3s 
 ❯ ./read 
 [Ctrl-V]⁥⁠͏​‏͏​‍͏​⁤­͏‎﻿͏​𝅶͏​⁤͏
 Some hidden text
