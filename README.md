@@ -1,3 +1,5 @@
+# Hide your messages 
+
 This command line tool allows to encode text into a invisible and zero width subset of unicode characters.
 
 Since unicode is rendered differently by different libaries the list of invisible characters must be altered accordingly. 
