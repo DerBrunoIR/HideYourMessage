@@ -3,6 +3,8 @@ from typing import TypeVar, Protocol, Iterable, Any, Callable
 import string
 import re
 
+
+# debugging decorator
 debug_global_indentation_count = 0
 def debug(func):
     def wrapper(*args, **kwargs):
@@ -17,8 +19,13 @@ def debug(func):
         return res 
     return wrapper
 
+
+# python type hint genercis
 E = TypeVar("E")
 D = TypeVar("D")
+
+
+# describes a translation, process where information can be lossless translated into another representation.
 class TranslatorInterface(Protocol[E, D]):
     def encode(self, obj: E) -> D:
         raise NotImplementedError()
@@ -33,7 +40,7 @@ class TranslatorInterface(Protocol[E, D]):
 
 class UnicodeCharacterTranslator(TranslatorInterface[str, int]):
     """
-    str -> int
+    python unicode character -> python int
     """
 
     def encode(self, char: str) -> int:
@@ -42,7 +49,7 @@ class UnicodeCharacterTranslator(TranslatorInterface[str, int]):
         return ord(char)
     
     def decode(self, number: int) -> str:
-        if not 0 <= number <= 255:
+        if not 0 <= number <= 255: # TODO add support for all unicode characters
             raise ValueError(f"number must be between 0 and 255, got {number}")
         return chr(number)
 
@@ -53,8 +60,9 @@ class UnicodeCharacterTranslator(TranslatorInterface[str, int]):
 
 class Base10ToBaseNTranslator(TranslatorInterface[str, int]):
     """
-    int -> str
     translates base 10 numbers into base n numbers
+    
+    base 10 python integer -> base n python unicode digit
     """
 
     base: int 
@@ -141,8 +149,11 @@ class InvertedTranslator(TranslatorInterface[E, D]):
 
 
 
-class IterableTranslator(TranslatorInterface[Iterable[E], Iterable[D]]):
 
+class IterableTranslator(TranslatorInterface[Iterable[E], Iterable[D]]):
+    """
+        translates a sequence of elements by using a element translator
+    """
 
     def __init__(self, itemTranslator: TranslatorInterface):
         self.translator = itemTranslator
@@ -167,7 +178,8 @@ class IterableTranslator(TranslatorInterface[Iterable[E], Iterable[D]]):
 
 class StringReplacementTranslator(TranslatorInterface[E,D]):
     """
-    int -> str 
+    translates elements by using a dictionary mapping.
+    E -> D 
     """
 
     charset: dict[E,D]
@@ -193,6 +205,10 @@ class StringReplacementTranslator(TranslatorInterface[E,D]):
 
 
 class FunctionTranslator(TranslatorInterface[E, D]):
+    """
+    Translates by using a function f and it's reverse function f_inv.
+    """
+    
     f: Callable[[E], D]
     f_inv: Callable[[D], E] 
 
@@ -211,6 +227,10 @@ class FunctionTranslator(TranslatorInterface[E, D]):
 
 
 class ChainedTranslator(TranslatorInterface[E, D]):
+    """
+    Translates by using translator t1 and translator t2 in sequence.
+    """
+    
     t1: TranslatorInterface
     t2: TranslatorInterface
 
@@ -235,6 +255,10 @@ class BuilderInterface(Protocol):
         pass
 
 class ChainTranslatorBuilder(BuilderInterface):
+    """
+    Allows the building of complex translator chains.
+    """
+    
     translators: list[TranslatorInterface[Any, Any]]
     
     def __init__(self):
@@ -261,6 +285,10 @@ class ChainTranslatorBuilder(BuilderInterface):
 
 
 class EmbeddedMessageTranslator(TranslatorInterface[str,str]):
+    """
+    Translates a string with certain prefix and suffix to a string without those.
+    """
+    
     start_seq: str 
     ennd_seq: str 
     pattern: re.Pattern
@@ -295,6 +323,10 @@ class EmbeddedMessageTranslator(TranslatorInterface[str,str]):
 
 
 class CharsetTranslatorBuilder(BuilderInterface):
+    """
+    Builder for a translator that translates a string between representations using two different sized character sets.
+    """
+    
     translator: TranslatorInterface[Any, Any]
     charset: str
     separator: str
