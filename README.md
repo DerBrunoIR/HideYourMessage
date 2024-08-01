@@ -1,6 +1,6 @@
 # Requirements 
 
-- python 3.10.6 (perhaps it works with older versions too)
+- python 3.10.6
 - tested on ubuntu 22.04
 - Bash scripts require `sudo apt install xclip`
 
@@ -13,12 +13,11 @@ The default is encoding.
 All invisible text will be outputed between a start and end sequence, otherwise it would be hard to find.
 Make sure your terminal supports unicode.
 
-# install
+# setup 
 - `git clone https://github.com/DerBrunoIR/Translator`
 - `cd ./Translator`
   
 # running python script 
-
 ```console
 foo@bar:~$ echo "This should be invisible!" | python3 ./cli.py > out.txt
 foo@bar:~$ cat out.txt
