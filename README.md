@@ -24,7 +24,7 @@ Using the `n-th` base instead of just `2` allows a compacter representation.
 - `git clone https://github.com/DerBrunoIR/Translator`
 - `cd ./Translator`
 
-# encode hidden message
+# encode message
 ```console 
 foo@bar:~$ ./write
 Some hidden text
@@ -34,7 +34,7 @@ foo@bar:~$ ./read
 ❯ Some hidden text
 ```
 
-# decode hidden message 
+# decode message 
 ```console
 foo@bar:~$ echo "This should be invisible!" | python3 ./cli.py > out.txt
 foo@bar:~$ cat out.txt
