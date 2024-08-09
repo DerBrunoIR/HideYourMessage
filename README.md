@@ -24,7 +24,7 @@ Using the `n-th` base instead of just `2` allows a compacter representation.
 - `git clone https://github.com/DerBrunoIR/Translator`
 - `cd ./Translator`
 
-# encode message
+# encode/decode messages via bash script
 ```console 
 foo@bar:~$ ./write
 Some hidden text
@@ -34,7 +34,7 @@ foo@bar:~$ ./read
 ❯ Some hidden text
 ```
 
-# decode message 
+# encode/decode messages via python script 
 ```console
 foo@bar:~$ echo "This should be invisible!" | python3 ./cli.py > out.txt
 foo@bar:~$ cat out.txt
@@ -42,15 +42,6 @@ foo@bar:~$ cat out.txt
 foo@bar:~$ cat out.txt | python3 ./cli.py -d
 >>> This should be invisible!
 ```
-
-# python3 cli tool
-```bash 
-python3 ./cli.py [--debug] [-d,--decode]
-```
-This script reads alle text from **stdin** and outputs the invisible unicode ecoded text to **stdout**.
-The default is encoding. 
-All invisible text will be outputed between a start and end sequence, otherwise it would be hard to find.
-Make sure your terminal supports unicode.
 
 # known issues
 - On windows command line unicode output is probably not working, try `wsl` instead.
