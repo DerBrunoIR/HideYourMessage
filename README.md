@@ -23,6 +23,7 @@ Using the `n-th` base instead of just `2` allows a compacter representation.
 # setup 
 - `git clone https://github.com/DerBrunoIR/Translator`
 - `cd ./Translator`
+- `python3 ./Translator.py`
 
 # encode/decode messages via bash script
 ```console 
