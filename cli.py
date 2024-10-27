@@ -39,8 +39,8 @@ unicode_invisible_zero_width = [
         ]
 
 # configuration
-startSequence                   = 1 * unicode_invisible_zero_width[0]
-endSequence                     = 1 * unicode_invisible_zero_width[1]
+prefix                          = 1 * unicode_invisible_zero_width[0]
+suffix                          = 1 * unicode_invisible_zero_width[1]
 invisible_separator             = 1 * unicode_invisible_zero_width[2]
 invisible_zero_width_alphabet   = unicode_invisible_zero_width[3:]
 
@@ -95,7 +95,7 @@ if __name__ == "__main__":
     builder = CharsetTranslatorBuilder()\
         .setCharset("".join(invisible_zero_width_alphabet))\
         .setSeparator(invisible_separator)\
-        .setSequences(startSequence, endSequence)
+        .setPrefixSuffix(prefix, suffix)
 
     translator = builder.build()
 
@@ -103,7 +103,7 @@ if __name__ == "__main__":
 
 
     content = stdin.read()
-    log(f"using sequences start: '{hex(ord(startSequence))}' and end: '{hex(ord(endSequence))}'", stderr)
+    log(f"using sequences start: '{hex(ord(prefix))}' and end: '{hex(ord(suffix))}'", stderr)
     if args.encode:
         log(f"Encoding {len(content)} characters.", file=stderr)
     else:

@@ -38,7 +38,7 @@ class TranslatorInterface(Protocol[E, D]):
 
 
 
-class UnicodeCharacterTranslator(TranslatorInterface[str, int]):
+class UnicodeToInteger(TranslatorInterface[str, int]):
     """
     python unicode character -> python int
     """
@@ -54,23 +54,27 @@ class UnicodeCharacterTranslator(TranslatorInterface[str, int]):
         return chr(number)
 
     def __repr__(self):
-        return f"<UnicodeCharacterTranslator>"
+        return f"<UnicodeToInteger>"
 
 
 
-class Base10ToBaseNTranslator(TranslatorInterface[str, int]):
+class Base10ToBaseNString(TranslatorInterface[str, int]):
     """
     translates base 10 numbers into base n numbers
+
+    base: new base
+    digits: digits for new base representation, ith-element represents ith-digit.
+    padding: number of preprended zeros.
     
     base 10 python integer -> base n python unicode digit
     """
 
     base: int 
     digits: str
-    padding: int 
+    prepend: int 
     
 
-    def __init__(self, base: int, digits: str, padding: int = 0):
+    def __init__(self, base: int, digits: str, prepend: int = 0):
         if base < 2:
             raise ValueError(f"base musst be >= 2, got {base}")
         self.digits = digits
@@ -78,7 +82,7 @@ class Base10ToBaseNTranslator(TranslatorInterface[str, int]):
             raise ValueError(f"len(digits) musst be >= base, got {len(digits)}")
 
         self.base = base
-        self.padding = padding
+        self.prepend = prepend
 
 
     def encode(self, decimal: int) -> str:
@@ -106,7 +110,7 @@ class Base10ToBaseNTranslator(TranslatorInterface[str, int]):
         if neg:
             digits.append('-')
 
-        while len(digits) < self.padding:
+        while len(digits) < self.prepend:
             digits.append(self.digits[0]) 
 
         return "".join(digits[::-1])
@@ -137,7 +141,7 @@ class Base10ToBaseNTranslator(TranslatorInterface[str, int]):
 
 
 
-class InvertedTranslator(TranslatorInterface[E, D]):
+class Inverted(TranslatorInterface[E, D]):
     def __init__(self, t: TranslatorInterface[D, E]):
         self.t = t
 
@@ -150,7 +154,7 @@ class InvertedTranslator(TranslatorInterface[E, D]):
 
 
 
-class IterableTranslator(TranslatorInterface[Iterable[E], Iterable[D]]):
+class Mapped(TranslatorInterface[Iterable[E], Iterable[D]]):
     """
         translates a sequence of elements by using a element translator
     """
@@ -172,39 +176,39 @@ class IterableTranslator(TranslatorInterface[Iterable[E], Iterable[D]]):
 
 
     def __repr__(self):
-        return f"<IterableTranslator itemTranslator={self.translator}>"
+        return f"<Mapped itemTranslator={self.translator}>"
 
 
 
-class StringReplacementTranslator(TranslatorInterface[E,D]):
+class Replace(TranslatorInterface[E,D]):
     """
     translates elements by using a dictionary mapping.
     E -> D 
     """
 
-    charset: dict[E,D]
-    charset_inv: dict[D, E]
+    mapping: dict[E,D]
+    mapping_inv: dict[D, E]
 
 
-    def __init__(self, charset: dict[E, D]):
-        self.charset = charset
-        self.charset_inv = {v: k for (k, v) in charset.items()}
+    def __init__(self, mapping: dict[E, D]):
+        self.mapping = mapping
+        self.mapping_inv = {v: k for (k, v) in mapping.items()}
 
 
     def encode(self, obj: E) -> D:
-        return self.charset[obj]
+        return self.mapping[obj]
 
 
     def decode(self, obj: D) -> E:
-        return self.charset_inv[obj]
+        return self.mapping_inv[obj]
 
 
     def __repr__(self):
-        return f"<CharsetIndexTranslator charset={self.charset}>"
+        return f"<Replace mapping={self.mapping}>"
 
 
 
-class FunctionTranslator(TranslatorInterface[E, D]):
+class Function(TranslatorInterface[E, D]):
     """
     Translates by using a function f and it's reverse function f_inv.
     """
@@ -223,10 +227,10 @@ class FunctionTranslator(TranslatorInterface[E, D]):
         return self.f_inv(obj)
     
     def __repr__(self):
-        return f"<FunctionTranslator>"
+        return f"<Function f={self.f} f_inv={self.f_inv}>"
 
 
-class ChainedTranslator(TranslatorInterface[E, D]):
+class Chained(TranslatorInterface[E, D]):
     """
     Translates by using translator t1 and translator t2 in sequence.
     """
@@ -247,7 +251,7 @@ class ChainedTranslator(TranslatorInterface[E, D]):
         return self.t1.decode(tmp)
 
     def __repr__(self):
-        return f"<ChainedTranslator left={self.t1} right={self.t2}>"
+        return f"<Chained left={self.t1} right={self.t2}>"
         
 
 class BuilderInterface(Protocol):
@@ -278,28 +282,28 @@ class ChainTranslatorBuilder(BuilderInterface):
         elif len(self.translators) == 1:
             return self.translators[0]
 
-        T = ChainedTranslator(*self.translators[:2])
+        T = Chained(*self.translators[:2])
         for t in self.translators[2:]:
-            T = ChainedTranslator(T, t)
+            T = Chained(T, t)
         return T
 
 
-class EmbeddedMessageTranslator(TranslatorInterface[str,str]):
+class AddPrefixSuffix(TranslatorInterface[str,str]):
     """
     Translates a string with certain prefix and suffix to a string without those.
     """
     
-    start_seq: str 
+    prefix: str 
     ennd_seq: str 
     pattern: re.Pattern
 
-    def __init__(self, start_seq: str, end_seq: str):
-        self.start_seq = start_seq
-        self.end_seq = end_seq
-        self.pattern = re.compile(f"{self.start_seq}.*{self.end_seq}", re.UNICODE)
+    def __init__(self, prefix: str, suffix: str):
+        self.prefix = prefix
+        self.suffix = suffix
+        self.pattern = re.compile(f"{self.prefix}.*{self.suffix}", re.UNICODE)
 
     def encode(self, rawMsg: str) -> str:
-        return f"{self.start_seq}{rawMsg}{self.end_seq}"
+        return f"{self.prefix}{rawMsg}{self.suffix}"
 
     def decode(self, text: str) -> str:
         for match in self.pattern.finditer(text):
@@ -308,17 +312,17 @@ class EmbeddedMessageTranslator(TranslatorInterface[str,str]):
         raise ValueError("No message found!")
 
     def decodeCandidate(self, embeddedMsg: str) -> str:
-        if not embeddedMsg.startswith(self.start_seq):
-            raise ValueError(f"Message doesn't start with the expected start sequence. Instead of '{self.start_seq}', '{embeddedMsg[:10]}' was found!")
-        if not embeddedMsg.endswith(self.end_seq):
-            raise ValueError(f"Message doesn't end with the expected end sequence. Instead of '{self.end_seq}', '{embeddedMsg[-10:]}' was found!")
-        left_offset = len(self.start_seq)
-        right_offset = len(self.end_seq)
+        if not embeddedMsg.startswith(self.prefix):
+            raise ValueError(f"Message doesn't start with the expected start sequence. Instead of '{self.prefix}', '{embeddedMsg[:10]}' was found!")
+        if not embeddedMsg.endswith(self.suffix):
+            raise ValueError(f"Message doesn't end with the expected end sequence. Instead of '{self.suffix}', '{embeddedMsg[-10:]}' was found!")
+        left_offset = len(self.prefix)
+        right_offset = len(self.suffix)
         msgLen = len(embeddedMsg)
         return embeddedMsg[left_offset: msgLen-right_offset]
 
     def __repr__(self):
-        return f"<EmbeddedMessageTranslator start_seq='{self.start_seq}' end_seq='{self.end_seq}'>"
+        return f"<AddPrefixSuffix prefix='{self.prefix}' suffix='{self.suffix}'>"
 
 
 
@@ -330,8 +334,8 @@ class CharsetTranslatorBuilder(BuilderInterface):
     translator: TranslatorInterface[Any, Any]
     charset: str
     separator: str
-    start_seq: str
-    end_seq: str
+    prefix: str
+    suffix: str
 
     def setCharset(self, charset: str) -> CharsetTranslatorBuilder:
         self.charset = charset
@@ -341,15 +345,15 @@ class CharsetTranslatorBuilder(BuilderInterface):
         self.separator = separator
         return self
 
-    def setSequences(self, start_seq: str, end_seq: str) -> CharsetTranslatorBuilder:
-        self.start_seq = start_seq
-        self.end_seq = end_seq
+    def setPrefixSuffix(self, prefix: str, suffix: str) -> CharsetTranslatorBuilder:
+        self.prefix = prefix
+        self.suffix = suffix
         return self
 
     def build(self) -> TranslatorInterface[str, str]:
         charset = self.charset
         separator = self.separator
-        start_seq, end_seq = self.start_seq, self.end_seq
+        prefix, suffix = self.prefix, self.suffix
         
 
         digits = string.digits + string.ascii_letters
@@ -361,40 +365,41 @@ class CharsetTranslatorBuilder(BuilderInterface):
                 }
 
         pipe = [
-                IterableTranslator(
-                    UnicodeCharacterTranslator()
+                Mapped(
+                    UnicodeToInteger()
                     ),
-                IterableTranslator(
-                    Base10ToBaseNTranslator(
-                        len(charset),
-                        digits
+                Mapped(
+                    Base10ToBaseNString(
+                        base=len(charset),
+                        digits=digits
                         )
                     ),
-                IterableTranslator(
-                    FunctionTranslator(
-                        str,
-                        "".join
+                Mapped( 
+                    Function( # list to str
+                        f=str,
+                        f_inv="".join,
                         )
                     ),
-                IterableTranslator(
-                    IterableTranslator(
-                        StringReplacementTranslator(
-                            replacement
+                Mapped(
+                    Mapped(
+                        Replace(
+                            mapping=replacement
                             )
                         )
                     ),
-                IterableTranslator(
-                    FunctionTranslator(
+                Mapped(
+                    Function(
                         "".join,
                         list
-                    )),
-                FunctionTranslator(
+                    )
+                ),
+                Function(
                     separator.join, 
                     lambda x: x.split(separator) 
                     ),
-                EmbeddedMessageTranslator(
-                    start_seq,
-                    end_seq,
+                AddPrefixSuffix(
+                    prefix=prefix,
+                    suffix=suffix,
                     )
                 ]
 
