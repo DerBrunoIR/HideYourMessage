@@ -44,5 +44,5 @@ foo@bar:~$ cat out.txt | python3 ./cli.py -d
 ```
 
 # known issues
-- Different programs may render zero width unicode symbols differently than definied by the standard.
+- Specific unicode symbols may be rendered differently be programs.
 
