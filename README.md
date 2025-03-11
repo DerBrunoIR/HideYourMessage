@@ -44,5 +44,5 @@ foo@bar:~$ cat out.txt | python3 ./cli.py -d
 ```
 
 # known issues
-- Specific unicode symbols may be rendered differently be programs.
+- Specific unicode symbols may be rendered inconsistently by different programs.
 
