@@ -44,5 +44,5 @@ foo@bar:~$ cat out.txt | python3 ./cli.py -d
 ```
 
 # known issues
-- On windows command line unicode output is probably not working, try `wsl` instead.
+- Different programs may render zero width unicode symbols differently than definied by the standard.
 
