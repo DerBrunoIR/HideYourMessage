@@ -1,8 +1,8 @@
 # Hide your messages 
 
 This command line tool allows encoding text into an invisible and zero width subset of Unicode characters.
-
-Since Unicode is rendered differently by different libraries the list of invisible characters must be altered accordingly. 
+Specific Unicode symbols may be rendered inconsistently by different programs or platforms.
+The set of invisible unicode characters can be adjusted in the source code.
 The default set has been tested at `PopOS 22.04`.
 
 # How the encoding works
@@ -49,5 +49,4 @@ foo@bar:~$ cat out.txt | python3 ./cli.py -d
 ```
 
 # known issues
-- Specific Unicode symbols may be rendered inconsistently by different programs.
 
