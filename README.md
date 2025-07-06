@@ -25,6 +25,10 @@ Using the `n-th` base instead of just `2` allows a compacter representation.
 - `cd ./Translator`
 
 # encode/decode messages via bash script
+
+> [!Note]
+> In certain environment, like windows, unicode input and output can be a problem.
+
 ```console 
 foo@bar:~$ ./write
 Some hidden text
