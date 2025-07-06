@@ -26,8 +26,6 @@ Using the `n-th` base instead of just `2` allows a compacter representation.
 
 # encode/decode messages via bash script
 
-> [!Note]
-> In certain environment, like windows, unicode input and output can be a problem.
 
 ```console 
 foo@bar:~$ ./write
@@ -39,6 +37,9 @@ foo@bar:~$ ./read
 ```
 
 # encode/decode messages via python script 
+> [!Note]
+> In certain environment, like windows, unicode input and output can be a problem.
+
 ```console
 foo@bar:~$ echo "This should be invisible!" | python3 ./cli.py > out.txt
 foo@bar:~$ cat out.txt
